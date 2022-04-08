@@ -37,10 +37,10 @@ function encodedPhrase(json,input1Text){
    const inputChar = input1Text.split("");//[a,d,f]
     const result1P = result1.querySelector("p");
     let output1 = ""; 
-        for (const singleData in json){
-            for (let i = 0; i < input1Text.length; i++){
-
-            if (inputChar[i] === json[singleData].letter){//problem... my searching/result comes out alphbelt.
+        
+    for (let i = 0; i < input1Text.length; i++){
+            for (const singleData in json){
+                 if (inputChar[i] === json[singleData].letter){
                 output1 += `${json[singleData].symbol}`;
                 //console.log(output)
             }
