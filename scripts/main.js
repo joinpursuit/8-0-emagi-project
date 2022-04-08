@@ -36,9 +36,13 @@ function encodedPhrase(json,input1Text){
     const result1P = result1.querySelector("p");
     let output1 = ""; 
         for (const singleData in json){
-            if (inputChar.includes(json[singleData].letter)){//so close...it does not return all - just one for each uni inout
+            for (let i = 0; i < input1Text.length; i++){
+
+            if (inputChar[i] === json[singleData].letter){//so close...it does not return all - just one for each uni inout
                 output1 += `${json[singleData].symbol}`;
                 //console.log(output)
+            }
+
             }
         }
     result1P.textContent = output1;
