@@ -24,6 +24,7 @@ searchForm.addEventListener('submit', (event) => search(event,data))
 
 
 
+
 let categories = [];
 for (let emoji of data) {
     for(let cat of emoji.categories){
@@ -49,7 +50,9 @@ const randomForm = document.querySelector('#random form')
 randomForm.addEventListener('submit', (event) => random(event, data))
 
 
+const replForm = document.querySelector('#replace form')
 
+replForm.addEventListener('submit', (event) => replace (event, data))
 
 
 }
@@ -194,3 +197,43 @@ const random = (event, data) =>{
     }
 
 }
+
+const replace = ((event, data) => {
+event.preventDefault();
+
+const reInput = event.target.replace.value.split(' ');
+
+const replaced = [];
+
+const reResult = document.querySelector('#replace .result p');
+const result = document.querySelector('#replace .result')
+
+
+if(reInput.length === 1 && reInput[0] === '') {
+    reResult.textContent = 'Error no input!';
+    result.classList.add('error');
+    result.classList.remove('success');
+    return;
+
+}
+
+    inputLoop: for (let word of reInput){
+
+     for (let emoji of data){
+        if (word.toLowerCase().includes(emoji.name)) {
+            let newWord = word.toLowerCase().replace(emoji.name, emoji.symbol)
+            replaced.push(newWord);
+            continue inputLoop;
+        }
+    }
+
+    replaced.push(word);
+
+}
+
+reResult.textContent = replaced.join(' ');
+result.classList.remove('error');
+result.classList.add('success');
+event.target.replace.value = '';
+
+})
