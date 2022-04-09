@@ -191,11 +191,21 @@ const random = (event, data) =>{
         if(emoji.categories.includes(raInput)){
                 emojis.push(emoji.symbol)
         }
-       raResult.textContent = emojis[Math.floor(Math.random() * emojis.length)]
-       result.classList.remove('error')
-       result.classList.add('success')
-    }
 
+    }
+    const animation = setInterval(() =>{
+
+        raResult.textContent = emojis[Math.floor(Math.random() * emojis.length)]
+    }, 250);
+
+    result.addEventListener('click', () => {
+        if(animation){
+            clearInterval(animation);
+        }
+    })
+
+    result.classList.remove('error')
+    result.classList.add('success')
 }
 
 const replace = ((event, data) => {
