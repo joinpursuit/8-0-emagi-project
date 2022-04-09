@@ -1,5 +1,6 @@
 # Emagi Project
 "#
+M C
 Emojis + magic = Emagi! ⭐️
 
 In this project, you'll build an interactive application that will make use of all kinds of emojis.
