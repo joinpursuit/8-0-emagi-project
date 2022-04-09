@@ -15,9 +15,42 @@ fetch(API)
 const emaji = (data) => {
     // create a variable for the form in the article id #encoded section 
 const encodeForm = document.querySelector('#encode form');
+const searchForm = document.querySelector('#search form');
 
 // add an event listener on the form, when the user SUBMITS a form (EVENT) is the API data will be used to encode text from the user
 encodeForm.addEventListener('submit', (event) => encode(event, data))
+
+searchForm.addEventListener('submit', (event) => search(event,data))
+
+
+
+let categories = [];
+for (let emoji of data) {
+    for(let cat of emoji.categories){
+        if(!categories.includes(cat)){
+            categories.push(cat)
+        }
+    }
+}
+
+const categoryList = document.querySelector('#random form #category')
+console.log(categoryList)
+
+for(let cat of categories){
+    let option = document.createElement('option')
+    option.textContent = cat
+    categoryList.append(option )
+}
+
+
+
+const randomForm = document.querySelector('#random form')
+
+randomForm.addEventListener('submit', (event) => random(event, data))
+
+
+
+
 
 }
 
@@ -89,3 +122,75 @@ const encode = ((event, data) => {
    event.target.encode.value = "";
 })
 
+
+const search = (event, data) =>{
+    event.preventDefault()
+
+    const seaInput = event.target.search.value
+    console.log(seaInput)
+
+    let searched = "";
+
+    const seaResult = document.querySelector('#search .result p');
+
+    const result = document.querySelector('#search .result');
+
+    // EDGE CASES -- FROM CSS MAKES THE H3 RESULT BOX RED
+    if(!seaInput){
+        // IF THE TEXT FIELD IS EMPTY INCLUDE AN ERROR MESSAGE TO THE RESULT ELEMENT
+        seaResult.textContent = 'Please input something';
+
+        // AFTER SUBMITTING IF THE TEXT FIELD IS EMPTY ADD A CALSS OF ERROR TO THE CLASS RESULT 
+        result.classList.add('error')
+
+        // remove the class of SUCCESS
+        result.classList.remove('success')
+        return
+    }
+
+    for(let emoji of data){
+        if(emoji.name.includes(seaInput)){
+            searched = searched + emoji.symbol
+        }
+
+    }
+
+        seaResult.textContent = searched;
+        // remove t
+        result.classList.remove('error')
+        // remove the class of error from the result element 
+        result.classList.add('success')
+        // AFTER SUBMITTING IF THE SEARCH WAS SUCCESSFUL ADD A CLASS OF SUCCESS TO THE RESULT ELEMENT
+        event.target.encode.value = "";
+        // AFTER SUBMITTING IF THE SEARCH WAS SUCCESSFUL CLEAR OUT THE TEXT FIELD
+}
+
+
+const random = (event, data) =>{
+    event.preventDefault();
+
+    const raInput = event.target.category.value.toLowerCase();
+
+    const raResult = document.querySelector('#random .result p');
+    const result = document.querySelector('#random .result');
+    // const input = event.target.category.value.toLowerCase();
+
+    if (raInput === '-- choose a category --'){
+        raResult.textContent = 'Please select a category!'; 
+        result.classList.add('error')
+        result.classList.remove('success');
+        return;
+
+    }
+
+    let emojis = [];
+    for (let emoji of data){
+        if(emoji.categories.includes(raInput)){
+                emojis.push(emoji.symbol)
+        }
+       raResult.textContent = emojis[Math.floor(Math.random() * emojis.length)]
+       result.classList.remove('error')
+       result.classList.add('success')
+    }
+
+}
