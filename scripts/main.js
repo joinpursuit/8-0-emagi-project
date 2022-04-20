@@ -8,7 +8,7 @@ function getEmojis() {
         .then((data) => {
             emojis = data;
             getCategories(emojis);
-            // console.log(emojis);
+            console.log(emojis);
         })
 }
 getEmojis();
@@ -27,7 +27,6 @@ encodeForm.addEventListener("submit", (event) => {
         resultSection.textContent = 'Please enter search value';
         resultSection.classList.add('error');
     } else {
-
         emojis.filter(el => {
             for (let i = 0; i < inputArray.length; i++) {
                 if (inputArray[i].toLowerCase() === el.letter) {
@@ -72,16 +71,21 @@ searchForm.addEventListener("submit", (event) => {
 // ------------------- Random Emoji by Category ------------------- //
 // -------------- Step 1 : Selected Options ----------------- //
 const selected = document.getElementById('category');
+const categoryResult = document.querySelector('#random .result p');
+
 selected.addEventListener('change', (event) => {
     const selectedValue = event.target.value;
+    if(selectedValue === selected.querySelector('option').value){
+        categoryResult.textContent = 'Please enter search value';
+        categoryResult.classList.add('error')
+    }
     searchByCategory(selectedValue);
 })
 
-
 function searchByCategory(selectedValue){
-    const categoryResult = document.querySelector('#random .result p');
+    
     const randomizerBtn = document.querySelector("#random button");
-    console.log(categoryResult);
+
     let emptyArr = [];    
 
     for (let e of emojis) {
@@ -90,19 +94,17 @@ function searchByCategory(selectedValue){
             emptyArr.push(e.symbol);
         }
     }
-    console.log(emptyArr)
+
     randomizerBtn.addEventListener('click', (event) => {
         event.preventDefault();
         categoryResult.textContent = emptyArr[Math.floor(Math.random() * emptyArr.length)]
+        categoryResult.classList.add('success');
     })
-
 }
-
 
 // ------------------------- Step 2 : Form our Categories ----------------------- //
 function getCategories(emojis) {
     let listedCategories = [];
-    console.log(emojis)
     for (let e in emojis) {
         listedCategories.push(emojis[e].categories);
     }
@@ -110,33 +112,40 @@ function getCategories(emojis) {
     makeCategories(noDups); //> Creates categories using our API
 
 }
+
 function makeCategories(noDups){
     const dropDown = document.querySelector("#random form select");
     for(i = 0; i < noDups.length - 1; i++){
         let capitalWord = noDups[i][0].toUpperCase() + noDups[i].slice(1);
         dropDown.innerHTML += `<option value=${noDups[i]}>${capitalWord}</option>`;
     }
-    // console.log(noDups);
-    // console.log(dropDown);
 }
 
 // ------------------- Replace Text ------------------- //
 const replaceform = document.querySelector("#replace form");
+const replaceText = document.querySelector('#replace .result p');
 
 replaceform.addEventListener("submit", (event) => {
     event.preventDefault();
     const string = event.target.replace.value;
     const stringArr = string.split(' ');
-    // console.log(stringArr)
 
-    emojis.filter(emoji => {
-        for(let i = 0; i < stringArr.length; i++){
-            if(stringArr[i].includes(emoji.name)){
-                stringArr[i] = stringArr[i].replace(emoji.name, emoji.symbol)
+    if(!string){
+        replaceText.textContent = 'Please enter search value';
+        replaceText.classList.add('error');
+    } else{
+        emojis.filter(emoji => {
+            for(let i = 0; i < stringArr.length; i++){
+                if(stringArr[i].includes(emoji.name)){
+                    stringArr[i] = stringArr[i].replace(emoji.name, emoji.symbol)
+                }
             }
-        }
-    })
-
-    const replaceText = document.querySelector('#replace .result p');
-    replaceText.textContent = stringArr.join(' ')
+        })
+        replaceText.textContent = stringArr.join(' ');
+        replaceText.classList.add('sucess');
+    }
 })
+
+
+
+
